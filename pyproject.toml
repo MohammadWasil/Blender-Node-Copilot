@@ -6,14 +6,14 @@ authors = [
     {name = "Mohammad Wasil Saleem"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12, <3.13"
 dependencies = [
     "pyyaml (>=6.0.2,<7.0.0)",
-    "pathlib (>=1.0.1,<2.0.0)"
+    "pathlib (>=1.0.1,<2.0.0)",
+    "datasets (>=4.1.1,<5.0.0)",
+    "torch (==2.8.0)",
+    "transformers (>=4.56.2,<5.0.0)"
 ]
-
-[dependency-groups]
-
 
 
 [build-system]
