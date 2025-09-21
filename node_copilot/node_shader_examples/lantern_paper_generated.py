@@ -2,10 +2,10 @@ import bpy
 groups = {}  # for node groups
 
 #--------------------------------------------
-#  Material: cube_generated
+#  Material: lantern_paper_generated
 #--------------------------------------------
 
-mat = bpy.data.materials.new("cube_generated")
+mat = bpy.data.materials.new("lantern_paper_generated")
 mat.use_nodes = True
 node_tree = mat.node_tree
 nodes = node_tree.nodes

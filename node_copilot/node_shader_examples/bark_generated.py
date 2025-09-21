@@ -60,17 +60,6 @@ node.outputs["Color"].default_value = (0.0, 0.0, 0.0, 0.0)
 node = nodes.new("ShaderNodeNormalMap")
 node.location = (-240.0, -60.0)
 
-#node = nodes.new("NodeFrame")
-#node.width = 400.0
-#node.height = 421.20001220703125
-#node.label = "Mapping"
-
-#node = nodes.new("NodeFrame")
-#node.width = 356.4000244140625
-#node.height = 899.5999755859375
-#node.name = "Frame.001"
-#node.label = "Textures"
-
 node = nodes.new("ShaderNodeBsdfPrincipled")
 node.location = (10.0, 300.0)
 node.distribution = 'GGX'
