@@ -1,3 +1,7 @@
+"""
+Example Material utilities for Blender.
+"""
+
 import bpy
 
 def assign_principled_material(obj, color=(1, 0, 0, 1), name="NewMaterial"):
