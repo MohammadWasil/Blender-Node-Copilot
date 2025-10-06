@@ -1,5 +1,18 @@
 # Blender-Node-Copilot
 
+# SetUp
+Create a python env and activate it:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+# install dependencies
+
+To instal packages mentioned in .toml file:
+```
+poetry install
+```
 **Generate Blender Shader and Geometry Node graphs directly from natural language.**
 
 Blender Node-CoPilot is an open-source Blender add-on designed to dramatically accelerate your 3D modeling and animation workflow. It allows you to describe the node setup you want in plain English, instantly generating the corresponding Shader or Geometry Node graph inside Blender.

@@ -1,0 +1,50 @@
+[
+    {
+        "input": "Create a realistic material in Blender using a standard PBR shader. The material should utilize a set of image textures for its color, roughness, and normal details, with the textures correctly applied using UV coordinates.",
+        "output": "bark_generated.py"
+    },
+    {
+        "input": "Create a completely transparent material suitable for an object like a window or a clear eye. The material should be smooth and allow light to pass through it fully.",
+        "output": "clear_eye.py"
+    },
+    {
+        "input": "Create a material that emits its own light and can be used as a light source. The material's color and strength should be easily adjustable.",
+        "output": "emission_light.py"
+    },
+    {
+        "input": "Create a material for realistic hair or fur. It should use different images to control the main color, how shiny it is, and how light passes through it, giving it a soft, lifelike glow.",
+        "output": "eye_brow.py"
+    },
+    {
+        "input": "Create a stylized fire or glowing material with a color gradient. The material should transition smoothly from a bright yellow or orange in the center to a darker red on the edges, giving the object a lit-up, burning appearance.",
+        "output": "fire_lantern_generated.py"
+    },
+    {
+        "input": "Create a material that simulates a human eye iris, featuring a detailed, radial pattern and a glossy, wet-looking surface.",
+        "output": "iris_generated.py"
+    },
+    {
+        "input": "Create a material that is both transparent and translucent. It should look like frosted glass or a type of see-through plastic that scatters light as it passes through it.",
+        "output": "lantern_paper_generated.py"
+    },
+    {
+        "input": "Create a realistic leaf material that uses textures to define its color and surface details. The material should also be thin enough for light to scatter through it, giving it a soft, translucent glow, and have transparent areas to define its shape.",
+        "output": "leaves_generated.py"
+    },
+    {
+        "input": "Create a material for a pine tree that uses an image to define its color. The material should use the image's transparency to cut out the shape of the pine needles.",
+        "output": "pine_tree_alpha_channel.py"
+    },
+    {
+        "input": "Create a detailed road material that uses separate images to define its color, roughness, and surface bumps, giving it a realistic, rough appearance.",
+        "output": "road_texture.py"
+    },
+    {
+        "input": "Create a material for a lantern's glass. The material should be dark and smooth, with a semi-transparent.",
+        "output": "rode_lantern_generated.py"
+    },
+    {
+        "input": "Create a wooden fence material that uses images to define its color and surface texture. The material should have a slightly metallic and rough look, giving it a weathered appearance.",
+        "output": "wooden_fence.py"
+    }
+]
