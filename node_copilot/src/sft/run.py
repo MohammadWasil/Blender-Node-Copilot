@@ -6,8 +6,6 @@ def main():
     config_path = "/content/Blender-Node-Copilot/node_copilot/src/sft/config.yaml"
     config = load_config(config_path)
 
-    print(config)
-
     input_prompt = "Can you make the sky look black?"
 
     sft_trainer = SupervisedFineTunedTrainer(config)
@@ -15,8 +13,6 @@ def main():
         sft_trainer.train()
     else:
         answer = sft_trainer.inference(input_prompt)
-    
-
 
 if __name__ == "__main__":
     main()

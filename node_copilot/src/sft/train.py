@@ -8,6 +8,8 @@ from data_loader import set_device, load_data
 
 from inference import inference
 
+import mlflow
+
 class SupervisedFineTunedTrainer:
     def __init__(self, config):
         self.config = config
@@ -26,6 +28,8 @@ class SupervisedFineTunedTrainer:
         self.model = self.load_model()
         self.sftconfiguration = SFTConfiguration(self.config)
         self.sft_config = self.sftconfiguration.get_sft_config()
+
+        mlflow.set_experiment("Supervised Fine Tuning QWEN2.5 Coder 0.5B v0.1")
         
     def load_tokenizer(self):
         tokenizer =  AutoTokenizer.from_pretrained(pretrained_model_name_or_path=self.model)
@@ -52,7 +56,7 @@ class SupervisedFineTunedTrainer:
     def train(self):
         
         print("Training started...")
-
+        
         trainer = SFTTrainer(
             model=self.model,
             processing_class=self.tokenizer,
@@ -63,7 +67,14 @@ class SupervisedFineTunedTrainer:
         #dl = trainer.get_train_dataloader()
         #batch = next(iter(dl))
 
-        trainer.train()
+        with mlflow.start_run() as run:
+          mlflow.transformers.autolog(log_models=False)
+          mlflow.log_param("epochs", self.config["Train"]["num_train_epochs"])
+
+          trainer.train()
+        print(f"MLflow Run ID: {run.info.run_id}")
+
+
     
     def inference(self, sentence):
         print("Input Prompt: ", sentence)
