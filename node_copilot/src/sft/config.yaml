@@ -1,7 +1,7 @@
 Process:
   SFT:
     Train: True # If set to true, it starts train, esle inference.
-  RewareModel:
+  RewardModel:
     FineTune: False
 
 Model:

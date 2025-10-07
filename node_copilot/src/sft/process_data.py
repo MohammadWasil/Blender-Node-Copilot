@@ -1,5 +1,3 @@
-
-
 def format_dataset(examples):
     if isinstance(examples["prompt"], list):
         output_texts = []

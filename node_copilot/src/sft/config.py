@@ -4,7 +4,7 @@ from trl import SFTConfig, SFTTrainer
 model_name = "Qwen/Qwen2.5-Coder-0.5B"
 
 class SFTConfiguration:
-    def__init__(self, config):
+    def __init__(self, config):
         self.config = config
 
     def get_sft_config(self):

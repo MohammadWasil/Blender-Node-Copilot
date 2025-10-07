@@ -1,25 +1,25 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from trl import SFTConfig, SFTTrainer
 
-from data_utils import format_dataset
+from process_data import format_dataset
 from config import SFTConfiguration
 
-from data_loader import set_device, load_dataset
+from data_loader import set_device, load_data
 
 from inference import inference
 
 class SupervisedFineTunedTrainer:
-    def __init__(self, config, train_dataset):
+    def __init__(self, config):
         self.config = config
         
         self.device = set_device()
-        self.model = self.config["model_name"]
+        self.model = self.config["Model"]["model_name"]
         
         self.dataset_path = self.config["Data"]["dataset_path"]
         self.dataset_file = self.config["Data"]["dataset_file"]
 
-        if config["Process"]["SFT"]["Train"]:
-            self.training_data = load_dataset(self.dataset_path, self.dataset_file)
+        if self.config["Process"]["SFT"]["Train"]:
+            self.training_data = load_data(self.dataset_path, self.dataset_file)
             self.dataset = self.get_dataset()
 
         self.tokenizer = self.load_tokenizer()
@@ -36,7 +36,7 @@ class SupervisedFineTunedTrainer:
         return tokenizer
 
     def load_model(self,):
-        if config["Process"]["SFT"]["Train"]:
+        if self.config["Process"]["SFT"]["Train"]:
             return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.model).to(self.device)
         else:
             # load the model from the output directory
@@ -67,7 +67,7 @@ class SupervisedFineTunedTrainer:
     
     def inference(self, sentence):
         print("Input Prompt: ", sentence)
-        answer = inference(sentence, self.model, self.tokenizer):
+        answer = inference(sentence, self.model, self.tokenizer)
 
         print("Output: ", answer)
         return answer
