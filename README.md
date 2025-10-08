@@ -39,3 +39,42 @@ To ensure the highest quality and most artist-friendly outputs, the core compile
 
 ## Technical Highlights
 This project combines advanced LLM fine-tuning and Reinforcement Learning with practical Blender API integration, resulting in a tool that lowers the barrier to entry for new artists while providing a significant productivity boost for veterans.
+
+
+Papers to look into:
+
+```bibtex
+@misc{ouyang2022traininglanguagemodelsfollow,
+      title={Training language models to follow instructions with human feedback}, 
+      author={Long Ouyang and Jeff Wu and Xu Jiang and Diogo Almeida and Carroll L. Wainwright and Pamela Mishkin and Chong Zhang and Sandhini Agarwal and Katarina Slama and Alex Ray and John Schulman and Jacob Hilton and Fraser Kelton and Luke Miller and Maddie Simens and Amanda Askell and Peter Welinder and Paul Christiano and Jan Leike and Ryan Lowe},
+      year={2022},
+      eprint={2203.02155},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2203.02155}, 
+}
+```
+
+```bibtex
+@misc{ye202560datapointssufficient,
+      title={60 Data Points are Sufficient to Fine-Tune LLMs for Question-Answering}, 
+      author={Junjie Ye and Yuming Yang and Qi Zhang and Tao Gui and Xuanjing Huang and Peng Wang and Zhongchao Shi and Jianping Fan},
+      year={2025},
+      eprint={2409.15825},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2409.15825}, 
+}
+```
+
+```bibtex
+@misc{vieira2024datadatafinetuninglarge,
+      title={How Much Data is Enough Data? Fine-Tuning Large Language Models for In-House Translation: Performance Evaluation Across Multiple Dataset Sizes}, 
+      author={Inacio Vieira and Will Allred and Séamus Lankford and Sheila Castilho and Andy Way},
+      year={2024},
+      eprint={2409.03454},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2409.03454}, 
+}
+```

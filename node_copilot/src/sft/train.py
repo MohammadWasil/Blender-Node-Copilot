@@ -74,7 +74,6 @@ class SupervisedFineTunedTrainer:
           trainer.train()
         print(f"MLflow Run ID: {run.info.run_id}")
 
-
     
     def inference(self, sentence):
         print("Input Prompt: ", sentence)
