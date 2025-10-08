@@ -209,3 +209,6 @@ __marimo__/
 # Blender
 *.blend
 *.blend1
+
+# pdf
+*.pdf

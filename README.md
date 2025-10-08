@@ -27,6 +27,8 @@ Node-CoPilot bridges the gap between creative intent and technical implementatio
 2. AI Compilation: An integrated language model translates your instruction into a structured node graph.
 3. Instant Generation: The add-on uses Blender's API to automatically build the full node setup directly in your editor.
 
+![User WorkFlow](node_copilot/diagram/user_flow.png)
+
 This process makes prototyping faster and serves as a powerful learning tool for newcomers.
 
 ## Future Development & AI Backbone
@@ -36,6 +38,9 @@ The add-on is currently being extended to offer more functionality:
 - Modification Requests: Request changes to a selected node group using natural language.
 
 To ensure the highest quality and most artist-friendly outputs, the core compiler is a fine-tuned Qwen Coder model. I am applying **Reinforcement Learning from Human Feedback (RLHF) with PPO** to align the model's outputs with the natural language and problem-solving styles of 3D artists.
+
+![Finetuning with RLHF](node_copilot/diagram/training_diagram.png)
+Diagram adapted from InstructGPT.
 
 ## Technical Highlights
 This project combines advanced LLM fine-tuning and Reinforcement Learning with practical Blender API integration, resulting in a tool that lowers the barrier to entry for new artists while providing a significant productivity boost for veterans.
