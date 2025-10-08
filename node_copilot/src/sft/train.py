@@ -10,8 +10,11 @@ from inference import inference
 
 import mlflow
 
+import os
+
 class SupervisedFineTunedTrainer:
     def __init__(self, config):
+        self.hugging_face_token = os.environ["HF_TOKEN"]
         self.config = config
         
         self.device = set_device()
@@ -32,7 +35,7 @@ class SupervisedFineTunedTrainer:
         mlflow.set_experiment("Supervised Fine Tuning QWEN2.5 Coder 0.5B v0.1")
         
     def load_tokenizer(self):
-        tokenizer =  AutoTokenizer.from_pretrained(pretrained_model_name_or_path=self.model)
+        tokenizer =  AutoTokenizer.from_pretrained(pretrained_model_name_or_path=self.model, token=self.hugging_face_token)
                 
         tokenizer.pad_token = tokenizer.unk_token
         tokenizer.pad_token_id = tokenizer.unk_token_id
@@ -41,7 +44,7 @@ class SupervisedFineTunedTrainer:
 
     def load_model(self,):
         if self.config["Process"]["SFT"]["Train"]:
-            return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.model).to(self.device)
+            return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.model, token=self.hugging_face_token).to(self.device)
         else:
             # load the model from the output directory
             #return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.model, device_map="auto", torch_dtype="auto")
