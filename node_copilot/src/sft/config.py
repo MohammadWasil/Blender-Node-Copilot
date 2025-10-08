@@ -4,7 +4,7 @@ from trl import SFTConfig, SFTTrainer
 model_name = "Qwen/Qwen2.5-Coder-0.5B"
 
 class SFTConfiguration:
-    def__init__(self, config):
+    def __init__(self, config):
         self.config = config
 
     def get_sft_config(self):
@@ -25,24 +25,24 @@ class SFTConfiguration:
             auto_find_batch_size=True,
 
             ## GROUP 2: Dataset-related
-            max_length=self.config["Train"]["max_length"], # renamed in v0.20
+            max_length=int(self.config["Train"]["max_length"]), # renamed in v0.20
             # Dataset
             # packing a dataset means no padding is needed
             packing=True,
             packing_strategy='wrapped', # added to approximate original packing behavior
 
             ## GROUP 3: These are typical training parameters
-            num_train_epochs=self.config["Train"]["num_train_epochs"],
-            learning_rate=self.config["Train"]["learning_rate"],
+            num_train_epochs=int(self.config["Train"]["num_train_epochs"]),
+            learning_rate=float(self.config["Train"]["learning_rate"]),
             # Optimizer
             # 8-bit Adam optimizer - doesn't help much if you're using LoRA!
             # optim='paged_adamw_8bit',
 
             ## GROUP 4: Logging parameters
-            logging_steps=self.config["Train"]["logging_steps"],
-            logging_dir=self.config["Train"]["logging_dir"],
-            output_dir=self.config["Train"]["output_dir"],
-            report_to=self.config["Train"]["report_to"],
+            logging_steps=int(self.config["Logging"]["logging_steps"]),
+            logging_dir=self.config["Logging"]["logging_dir"],
+            output_dir=self.config["Logging"]["output_dir"],
+            report_to=self.config["Logging"]["report_to"],
 
             # ensures bf16 (the new default) is only used when it is actually available
             # bf16=torch.cuda.is_bf16_supported(including_emulation=False)

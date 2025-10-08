@@ -1,15 +1,15 @@
 Process:
   SFT:
     Train: True # If set to true, it starts train, esle inference.
-  RewareModel:
+  RewardModel:
     FineTune: False
 
 Model:
   model_name: "Qwen/Qwen2.5-Coder-0.5B"
 
 Data:
-  dataset_file: "" # file
-  dataset_path: "" # root
+  dataset_file: "/content/Blender-Node-Copilot/node_copilot/data/training_data.json" # file
+  dataset_path: "/content/" # root
 
 Train:
   max_length: 2000
@@ -19,6 +19,6 @@ Train:
 Logging:
   logging_steps: 10
   logging_dir: './logs'
-  output_dir: './phi3-mini-yoda-adapter'
-  report_to: 'none'
+  output_dir: './qwen2.5_0_5b_param'
+  report_to: 'mlflow'
 
