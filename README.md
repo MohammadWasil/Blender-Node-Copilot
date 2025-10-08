@@ -1,4 +1,4 @@
-# Blender-Node-Copilot
+# Blender-Node-Copilot (WiP)
 
 # SetUp
 Create a python env and activate it:
