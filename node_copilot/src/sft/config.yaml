@@ -5,7 +5,7 @@ Process:
     FineTune: False
 
 Model:
-  model_name: "meta-llama/Llama-3.2-1B-Instruct"
+  model_name: "meta-llama/Llama-3.2-1B" # "Qwen/Qwen2.5-Coder-0.5B"
 
 Data:
   dataset_file: "/content/Blender-Node-Copilot/node_copilot/data/training_data.json" # file
@@ -15,10 +15,14 @@ Train:
   max_length: 2000
   num_train_epochs: 10
   learning_rate: 3e-4
+  LORA:
+    rank_dimension: 6
+    lora_alpha: 8
+    lora_dropout: 0.05
 
 Logging:
   logging_steps: 10
   logging_dir: './logs'
-  output_dir: './Llama-3.2-1B-Instruct'
+  output_dir: './Llama-3.2-1B'
   report_to: 'mlflow'
 

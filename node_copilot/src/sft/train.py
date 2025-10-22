@@ -8,6 +8,8 @@ from data_loader import set_device, load_data
 
 from inference import inference
 
+from lora import LoraConfig
+
 import mlflow
 
 import os
@@ -31,6 +33,7 @@ class SupervisedFineTunedTrainer:
         self.model = self.load_model()
         self.sftconfiguration = SFTConfiguration(self.config)
         self.sft_config = self.sftconfiguration.get_sft_config()
+        self.lora_config = LoraConfig(config)
 
         mlflow.set_experiment("Supervised Fine Tuning QWEN2.5 Coder 0.5B v0.1")
         
@@ -65,6 +68,7 @@ class SupervisedFineTunedTrainer:
             processing_class=self.tokenizer,
             args=self.sft_config,
             train_dataset=self.dataset,
+            peft_config=self.lora_config.get_lora_config()
         )
 
         #dl = trainer.get_train_dataloader()

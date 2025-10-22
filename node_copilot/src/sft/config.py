@@ -20,7 +20,7 @@ class SFTConfiguration:
             # Actual batch (for updating) is same (1x) as micro-batch size
             gradient_accumulation_steps=1,
             # The initial (micro) batch size to start off with
-            per_device_train_batch_size=16,
+            per_device_train_batch_size=4,
             # If batch size would cause OOM, halves its size until it works
             auto_find_batch_size=True,
 
