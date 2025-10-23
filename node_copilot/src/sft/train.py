@@ -8,7 +8,7 @@ from data_loader import set_device, load_data
 
 from inference import inference
 
-from lora import LoraConfig
+from lora import LoraConfiguration
 
 import mlflow
 
@@ -20,7 +20,7 @@ class SupervisedFineTunedTrainer:
         self.config = config
         
         self.device = set_device()
-        self.model = self.config["Model"]["model_name"]
+        self.model_name = self.config["Model"]["model_name"]
         
         self.dataset_path = self.config["Data"]["dataset_path"]
         self.dataset_file = self.config["Data"]["dataset_file"]
@@ -29,29 +29,38 @@ class SupervisedFineTunedTrainer:
             self.training_data = load_data(self.dataset_path, self.dataset_file)
             self.dataset = self.get_dataset()
 
-        self.tokenizer = self.load_tokenizer()
         self.model = self.load_model()
+        self.tokenizer = self.load_tokenizer()
         self.sftconfiguration = SFTConfiguration(self.config)
         self.sft_config = self.sftconfiguration.get_sft_config()
-        self.lora_config = LoraConfig(config)
+        self.lora_config = LoraConfiguration(config)
 
         mlflow.set_experiment("Supervised Fine Tuning QWEN2.5 Coder 0.5B v0.1")
         
     def load_tokenizer(self):
-        tokenizer =  AutoTokenizer.from_pretrained(pretrained_model_name_or_path=self.model, token=self.hugging_face_token)
+        if self.config["Process"]["SFT"]["Train"]:
+            tokenizer =  AutoTokenizer.from_pretrained(pretrained_model_name_or_path=self.model_name, token=self.hugging_face_token)
+        else:
+            tokenizer =  AutoTokenizer.from_pretrained(pretrained_model_name_or_path=self.config["Model"]["output_dir"])
                 
         tokenizer.pad_token = tokenizer.unk_token
         tokenizer.pad_token_id = tokenizer.unk_token_id
         #tokenizer.chat_template
         return tokenizer
 
+    def save_model(self):
+        self.model.save_pretrained(self.config["Model"]["output_dir"])
+
+    def save_tokenizer(self):
+        self.tokenizer.save_pretrained(self.config["Model"]["output_dir"])
+
     def load_model(self,):
         if self.config["Process"]["SFT"]["Train"]:
-            return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.model, token=self.hugging_face_token).to(self.device)
+            return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.model_name, token=self.hugging_face_token).to(self.device)
         else:
             # load the model from the output directory
-            #return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.model, device_map="auto", torch_dtype="auto")
-            pass
+            return AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=self.config["Model"]["output_dir"], device_map="auto", torch_dtype="auto")
+            #pass
 
     def get_dataset(self):
         dataset = self.training_data.map(format_dataset)
@@ -80,6 +89,10 @@ class SupervisedFineTunedTrainer:
 
           trainer.train()
         print(f"MLflow Run ID: {run.info.run_id}")
+
+        # save the model and tokenizer after training
+        self.save_model()
+        self.save_tokenizer()
 
     
     def inference(self, sentence):

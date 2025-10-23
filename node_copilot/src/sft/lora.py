@@ -1,9 +1,9 @@
 """
 Source : https://huggingface.co/learn/llm-course/en/chapter11/4
 """
-from peft import LoraConfig, TaskType
+from peft import LoraConfig
 
-class LoraConfig:
+class LoraConfiguration:
   def __init__(self, config):
 
     self.config = config
@@ -24,7 +24,7 @@ class LoraConfig:
         lora_dropout=self.lora_dropout,  # Dropout probability for LoRA layers
         bias="none",  # Bias type for LoRA. the corresponding biases will be updated during training.
         target_modules="all-linear",  # Which modules to apply LoRA to
-        task_type=TaskType.CAUSAL_LM,  # Task type for model architecture
+        task_type="CAUSAL_LM",  # Task type for model architecture
     )
 
     return peft_config
