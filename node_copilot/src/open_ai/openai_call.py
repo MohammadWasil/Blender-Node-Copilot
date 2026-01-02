@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 from .openai_client import call_openai
-from data_utils.load_json import load_json
+from ..data_utils.load_json import load_json
 
 class OpenAICaller:
     """Simple wrapper for calling OpenAI via `call_openai`.

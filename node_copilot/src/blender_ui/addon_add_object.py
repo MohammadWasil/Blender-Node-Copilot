@@ -1,6 +1,7 @@
 # To make this add-on installable, create an extension with it:
 # https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html
 
+import threading
 import textwrap
 import os, sys
 
@@ -16,15 +17,40 @@ if not dir in sys.path:
 
 import node_copilot.src.examples.material
 import node_copilot.src.blender_ui.file_generator
+import node_copilot.src.open_ai.openai_call
+import node_copilot.src.data_utils.load_json
 
 # this next part forces a reload in case you edit the source after you first start the blender session
 import imp
 imp.reload(node_copilot.src.examples.material)
 imp.reload(node_copilot.src.blender_ui.file_generator)
+imp.reload(node_copilot.src.open_ai.openai_call)
+imp.reload(node_copilot.src.data_utils.load_json)
 
 # this is optional and allows you to call the functions without specifying the package name
 from node_copilot.src.examples.material import assign_principled_material
 from node_copilot.src.blender_ui.file_generator import create_and_load_py_file
+from node_copilot.src.open_ai.openai_call import OpenAICaller
+from node_copilot.src.data_utils.load_json import load_json
+
+llm_result = None
+
+def check_llm_result(scene):
+    global llm_result
+    if llm_result is not None:
+        # Safe: updating Blender or UI
+        # Add LLM Response
+        llm_msg = scene.chat_history.add()
+        llm_msg.content = llm_result #"""Hello! 😊 
+                            #How can I help you today?""" # replce with LLm invoke function here.
+        llm_msg.sender = "LLM"
+        #print("LLM reply:", llm_result)
+        
+        # Reset the variable
+        llm_result = None
+        return None  # Stop the timer
+    return 1  # Check again in 0.2 seconds
+
 
 class ChatMessage(PropertyGroup):
     content: StringProperty(name="Chat", default="")
@@ -70,12 +96,12 @@ class ChatOperator(bpy.types.Operator):
             new_msg.content = scene.chat_input # Take what's in the input field
             new_msg.sender = "USER"
             
-            # Add LLM Response
-            llm_msg = scene.chat_history.add()
-            llm_msg.content = """Hello! 😊 
-                               How can I help you today?""" # replce with LLm invoke function here.
-            llm_msg.sender = "LLM"
-            
+            thread = threading.Thread(target=worker, args=(new_msg.content,))
+            thread.start()
+
+            # Start polling
+            bpy.app.timers.register(lambda: check_llm_result(scene))
+
             # Clear the input box
             scene.chat_input = ""
             
@@ -203,6 +229,13 @@ def register():
 def unregister():
     for cls in _classes:
         unregister_class(cls)
+
+def worker(user_messages):
+    global llm_result
+    caller = OpenAICaller()
+    system_prompt = load_json("node_copilot/prompt/system_prompt.json")
+    result = caller.send(system_prompt, user_message=user_messages)
+    print(result)
 
 if __name__ == '__main__':
     register()
