@@ -1,34 +1,40 @@
 import os
+from typing import Optional
 
 from .openai_client import call_openai
 from data_utils.load_json import load_json
 
-def get_api_key() -> str:
-    """
-    Retrieves the OpenAI API key from environment variables.
-    Raises an error if the key is not found.
-    """
-    api_key = os.environ.get("OPENAIKEY")
-    if not api_key:
-        raise RuntimeError("OPENAIKEY environment variable not set")
-    return api_key
+class OpenAICaller:
+    """Simple wrapper for calling OpenAI via `call_openai`.
 
-def main(api_key: str, system_prompt: dict):
-    result = call_openai(
-        api_key,
-        messages=[
-            system_prompt,
-            {"role": "user", "content": "Make my cube red."}
-        ],
-    )
-    return result
+    Usage:
+        caller = OpenAICaller()  # reads OPENAIKEY from env
+        result = caller.send(system_prompt, "Make my cube red.")
+    """
 
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or self.get_api_key()
+
+    @staticmethod
+    def get_api_key() -> str:
+        api_key = os.environ.get("OPENAIKEY")
+        if not api_key:
+            raise RuntimeError("OPENAIKEY environment variable not set")
+        return api_key
+
+    def send(self, system_prompt: dict, user_message: str = "Make my cube red."):
+        result = call_openai(
+            self.api_key,
+            messages=[
+                system_prompt,
+                {"role": "user", "content": user_message},
+            ],
+        )
+        return result
+
+# need to call this when press "Enter" int the chatbox.
 if __name__ == "__main__":
-    # get your key
-    api_key = get_api_key()
-
-    # Load System Prompt Example
+    caller = OpenAICaller()
     system_prompt = load_json("/mnt/d/Blender/Blender Node Copilot/node_copilot/prompt/system_prompt.json")
-
-    result = main(api_key, system_prompt)
+    result = caller.send(system_prompt, user_message="Make my cube red.")
     print(result)
