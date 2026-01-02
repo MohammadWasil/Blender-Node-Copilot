@@ -1,5 +1,11 @@
 # Blender-Node-Copilot (WiP)
 
+Example (More will follow):
+
+![User WorkFlow](node_copilot/diagram/blender_co_pilot_example.png)
+
+This panel consists of a mesh selector, which selects the object the graph generator will be applied to, and a small chatbox for communication. It includes a clear cache button to delete the chat history and a Generate Nodes button that creates the graph using generated Python code.
+
 # SetUp
 Create a python env and activate it:
 ```
