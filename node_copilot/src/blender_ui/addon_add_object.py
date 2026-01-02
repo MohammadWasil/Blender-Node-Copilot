@@ -34,7 +34,6 @@ class ChatboxData(PropertyGroup):
     chat_history: CollectionProperty(type=ChatMessage)
     chat_input: StringProperty(name="Chat Input", default="")
 
-
 class ButtonOperator(bpy.types.Operator):
     """Tooltip"""
     bl_idname = "object.node_generator_button"
@@ -79,8 +78,6 @@ class ChatOperator(bpy.types.Operator):
             
             # Clear the input box
             scene.chat_input = ""
-            # Refresh the UI to show the new message
-            #bpy.ops.wm.redraw_all()
             
         return {'FINISHED'}
 
@@ -91,7 +88,6 @@ def draw_multiline_text(layout, text, width=40):
     col = layout.column(align=True)
     for line in lines:
         col.label(text=line)
-
 
 class NodeCoPilotPanel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
@@ -110,7 +106,7 @@ class NodeCoPilotPanel(bpy.types.Panel):
         # Draw the new mesh placeholder property
         layout.prop(context.scene, "my_mesh_placeholder", text="Mesh Object")
         
-        # --- Start of Chat Box UI ---
+        # Start of Chat Box UI
 
         # A horizontal line to separate the sections
         layout.separator()
@@ -127,14 +123,6 @@ class NodeCoPilotPanel(bpy.types.Panel):
         # Adding a label or empty space keeps the box from collapsing
         col.label(text="")
     
-        #inner_box = col.box()
-        #inner_box_column = inner_box.column()
-        #inner_box_column.label(text="")
-        #inner_box_column.scale_y = 0.5
-        #inner_box_column.prop(context.scene, "chat_history", text="", emboss=False)
-        # Draw the wrapped text inside the user box
-        #draw_multiline_text(inner_box_column, context.scene.chat_history, width=30)
-        
         # Create a box for eveyr new message
         for msg in context.scene.chat_history:
             # Create a row to align left (LLM) /right (USER)
@@ -149,8 +137,7 @@ class NodeCoPilotPanel(bpy.types.Panel):
     
                 # Draw the text using your function
                 draw_multiline_text(inner_col, msg.content, width=30)
-            
-            
+
             else:
                 # Create the individual bubble
                 inner_box = row.box()
@@ -167,12 +154,11 @@ class NodeCoPilotPanel(bpy.types.Panel):
         row.prop(context.scene, "chat_input", text="")
         row.operator("object.chat_operator", text="", icon='RIGHTARROW')
         
-        # --- End of Chat Box UI ---
+        # End of Chat Box UI
         
-        # Add the clear button here
+        # Add the Chat clear button
         layout.operator("chat.clear_history", text="Clear Chat History", icon='TRASH')
         
-        #layout.prop(context.scene, "copilot_text", text="")
         layout.operator(ButtonOperator.bl_idname, text="Generate Nodes (Python Code)", icon='WORLD_DATA')
 
 class CHAT_OT_clear_history(bpy.types.Operator):
@@ -189,8 +175,6 @@ class CHAT_OT_clear_history(bpy.types.Operator):
         
         return {'FINISHED'}
 
-
-
 _classes = [ChatMessage, ButtonOperator, NodeCoPilotPanel, ChatOperator, CHAT_OT_clear_history]
 
 def register():
@@ -205,25 +189,12 @@ def register():
         poll=lambda self, obj: obj.type == 'MESH'
     )
     
-    #bpy.types.Scene.chat_history = bpy.props.StringProperty(
-    #    name="Chat History",
-    #    default="",
-        #subtype='AREA'  # This makes it a multi-line text box
-    #)
-    
     bpy.types.Scene.chat_input = bpy.props.StringProperty(
         name="Chat Input",
         default=""
     )
     
     bpy.types.Scene.chat_history = bpy.props.CollectionProperty(type=ChatMessage)
-        
-    ## This property is registered on the global Blender Scene, so its value persists.
-    #bpy.types.Scene.copilot_text = bpy.props.StringProperty(
-    #    name="Your Text",
-    #    description="Type Here",
-    #    default=""
-    #)
     
     # Register the PropertyGroup and the PointerProperty to it
     bpy.utils.register_class(ChatboxData)
@@ -232,8 +203,6 @@ def register():
 def unregister():
     for cls in _classes:
         unregister_class(cls)
-    #bpy.utils.unregister_class(ChatboxData)
-
 
 if __name__ == '__main__':
     register()
