@@ -1,4 +1,5 @@
 Prompt:
+  system_prompt: node_copilot/prompt/system_prompt.txt
   input_python_scripts: node_copilot/node_shader_examples
   prompts_example: node_copilot/prompt/prompts_example.json
   training_data: node_copilot/data/training_data.json
