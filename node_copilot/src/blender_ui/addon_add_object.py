@@ -14,17 +14,17 @@ dir = os.path.dirname(bpy.data.filepath)
 if not dir in sys.path:
     sys.path.append(dir )
 
-import node_copilot.material
-import node_copilot.file_generator
+import node_copilot.src.examples.material
+import node_copilot.src.blender_ui.file_generator
 
 # this next part forces a reload in case you edit the source after you first start the blender session
 import imp
-imp.reload(node_copilot.material)
-imp.reload(node_copilot.file_generator)
+imp.reload(node_copilot.src.examples.material)
+imp.reload(node_copilot.src.blender_ui.file_generator)
 
 # this is optional and allows you to call the functions without specifying the package name
-from node_copilot.material import assign_principled_material
-from node_copilot.file_generator import create_and_load_py_file
+from node_copilot.src.examples.material import assign_principled_material
+from node_copilot.src.blender_ui.file_generator import create_and_load_py_file
 
 class ChatboxData(PropertyGroup):
     chat_history: StringProperty(name="Chat History", default="")
