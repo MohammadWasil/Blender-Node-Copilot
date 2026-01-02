@@ -35,6 +35,6 @@ class OpenAICaller:
 # need to call this when press "Enter" int the chatbox.
 if __name__ == "__main__":
     caller = OpenAICaller()
-    system_prompt = load_json("/mnt/d/Blender/Blender Node Copilot/node_copilot/prompt/system_prompt.json")
+    system_prompt = load_json("node_copilot/prompt/system_prompt.json")
     result = caller.send(system_prompt, user_message="Make my cube red.")
     print(result)
