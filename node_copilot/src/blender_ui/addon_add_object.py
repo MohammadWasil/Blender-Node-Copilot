@@ -5,7 +5,7 @@ import textwrap
 import os, sys
 
 import bpy
-from bpy.props import StringProperty
+from bpy.props import StringProperty, CollectionProperty
 from bpy.utils import register_class, unregister_class
 from bpy.types import Operator, Panel, PropertyGroup
 
@@ -26,9 +26,14 @@ imp.reload(node_copilot.src.blender_ui.file_generator)
 from node_copilot.src.examples.material import assign_principled_material
 from node_copilot.src.blender_ui.file_generator import create_and_load_py_file
 
+class ChatMessage(PropertyGroup):
+    content: StringProperty(name="Chat", default="")
+    sender: StringProperty(name="sender", default="USER") # To track if it's "USER" or "LLM"
+
 class ChatboxData(PropertyGroup):
-    chat_history: StringProperty(name="Chat History", default="")
+    chat_history: CollectionProperty(type=ChatMessage)
     chat_input: StringProperty(name="Chat Input", default="")
+
 
 class ButtonOperator(bpy.types.Operator):
     """Tooltip"""
@@ -61,7 +66,17 @@ class ChatOperator(bpy.types.Operator):
         scene = context.scene
         if scene.chat_input:
             # Append the message to the history with a newline
-            scene.chat_history += f"User: {scene.chat_input}\n"
+            #scene.chat_history += f"User: {scene.chat_input}\n"
+            new_msg = scene.chat_history.add()
+            new_msg.content = scene.chat_input # Take what's in the input field
+            new_msg.sender = "USER"
+            
+            # Add LLM Response
+            llm_msg = scene.chat_history.add()
+            llm_msg.content = """Hello! 😊 
+                               How can I help you today?""" # replce with LLm invoke function here.
+            llm_msg.sender = "LLM"
+            
             # Clear the input box
             scene.chat_input = ""
             # Refresh the UI to show the new message
@@ -69,16 +84,14 @@ class ChatOperator(bpy.types.Operator):
             
         return {'FINISHED'}
 
-# --- Helper function for multiline text ---
-def _label_multiline(context, text, parent):
-    if not text:
-        return
-    # This is a good approximation, but a proper solution would use a text editor template
-    chars = int(context.region.width / 7) if context.region else 80
-    wrapper = textwrap.TextWrapper(width=chars)
-    text_lines = wrapper.wrap(text=text)
-    for text_line in text_lines:
-        parent.label(text=text_line)
+def draw_multiline_text(layout, text, width=40):
+    # This splits the long string into a list of shorter lines
+    lines = textwrap.wrap(text, width=width)
+    
+    col = layout.column(align=True)
+    for line in lines:
+        col.label(text=line)
+
 
 class NodeCoPilotPanel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
@@ -98,28 +111,92 @@ class NodeCoPilotPanel(bpy.types.Panel):
         layout.prop(context.scene, "my_mesh_placeholder", text="Mesh Object")
         
         # --- Start of Chat Box UI ---
-        
+
         # A horizontal line to separate the sections
         layout.separator()
-        layout.label(text="Chat with Copilot:")
+        layout.label(text="Chat with Blender Node Copilot:")
         
         # Conversation History
         box = layout.box()
-        box.prop(context.scene, "chat_history", text="", emboss=False)
+        #box.prop(context.scene, "chat_history", text="", emboss=False)
         
+        # To make it look like a square, we create a column 
+        # inside the box and scale its height.
+        col = box.column(align=True)
+        
+        # Adding a label or empty space keeps the box from collapsing
+        col.label(text="")
+    
+        #inner_box = col.box()
+        #inner_box_column = inner_box.column()
+        #inner_box_column.label(text="")
+        #inner_box_column.scale_y = 0.5
+        #inner_box_column.prop(context.scene, "chat_history", text="", emboss=False)
+        # Draw the wrapped text inside the user box
+        #draw_multiline_text(inner_box_column, context.scene.chat_history, width=30)
+        
+        # Create a box for eveyr new message
+        for msg in context.scene.chat_history:
+            # Create a row to align left (LLM) /right (USER)
+            row = col.row()
+            if msg.sender == "USER":
+                row.separator(factor=2)
+            
+                # Create the individual bubble
+                inner_box = row.box()
+                inner_col = inner_box.column(align=True)
+                inner_col.scale_y = 1
+    
+                # Draw the text using your function
+                draw_multiline_text(inner_col, msg.content, width=30)
+            
+            
+            else:
+                # Create the individual bubble
+                inner_box = row.box()
+                inner_col = inner_box.column(align=True)
+                inner_col.scale_y = 1
+                
+                # Draw the text using your function
+                draw_multiline_text(inner_col, msg.content, width=30)
+                row.separator()
+        # ---------------------------- # 
+
         # Input Field and Send Button
         row = layout.row(align=True)
-        row.prop(context.scene, "chat_input", text="", icon='DOT')
-        row.operator("object.chat_operator", text="Send", icon='RIGHTARROW')
+        row.prop(context.scene, "chat_input", text="")
+        row.operator("object.chat_operator", text="", icon='RIGHTARROW')
         
         # --- End of Chat Box UI ---
         
+        # Add the clear button here
+        layout.operator("chat.clear_history", text="Clear Chat History", icon='TRASH')
+        
         #layout.prop(context.scene, "copilot_text", text="")
-        layout.operator(ButtonOperator.bl_idname, text="Generate Nodes", icon='WORLD_DATA')
+        layout.operator(ButtonOperator.bl_idname, text="Generate Nodes (Python Code)", icon='WORLD_DATA')
 
-_classes = [ButtonOperator, NodeCoPilotPanel, ChatOperator]
+class CHAT_OT_clear_history(bpy.types.Operator):
+    bl_idname = "chat.clear_history"
+    bl_label = "Clear Chat"
+    bl_description = "Delete all messages in the chat history"
+    
+    def execute(self, context):
+        # This empties the entire collection at once
+        context.scene.chat_history.clear()
+        
+        # Optional: Reset the input field too
+        context.scene.chat_input = ""
+        
+        return {'FINISHED'}
+
+
+
+_classes = [ChatMessage, ButtonOperator, NodeCoPilotPanel, ChatOperator, CHAT_OT_clear_history]
 
 def register():
+    
+    for cls in _classes:
+        register_class(cls)
     # 1. Define a StringProperty with the 'AREA' subtype to create a multi-line text box.
     
     bpy.types.Scene.my_mesh_placeholder = bpy.props.PointerProperty(
@@ -128,16 +205,18 @@ def register():
         poll=lambda self, obj: obj.type == 'MESH'
     )
     
-    bpy.types.Scene.chat_history = bpy.props.StringProperty(
-        name="Chat History",
-        default="",
+    #bpy.types.Scene.chat_history = bpy.props.StringProperty(
+    #    name="Chat History",
+    #    default="",
         #subtype='AREA'  # This makes it a multi-line text box
-    )
+    #)
     
     bpy.types.Scene.chat_input = bpy.props.StringProperty(
         name="Chat Input",
         default=""
     )
+    
+    bpy.types.Scene.chat_history = bpy.props.CollectionProperty(type=ChatMessage)
         
     ## This property is registered on the global Blender Scene, so its value persists.
     #bpy.types.Scene.copilot_text = bpy.props.StringProperty(
@@ -150,10 +229,6 @@ def register():
     bpy.utils.register_class(ChatboxData)
     bpy.types.Scene.chatbox_data = bpy.props.PointerProperty(type=ChatboxData)
     
-    for cls in _classes:
-        register_class(cls)
-
-
 def unregister():
     for cls in _classes:
         unregister_class(cls)
