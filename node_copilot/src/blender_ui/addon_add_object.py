@@ -31,7 +31,7 @@ imp.reload(node_copilot.src.data_utils.load_json)
 from node_copilot.src.examples.material import assign_principled_material
 from node_copilot.src.blender_ui.file_generator import create_and_load_py_file
 from node_copilot.src.open_ai.openai_call import OpenAICaller
-from node_copilot.src.data_utils.load_json import load_json
+from node_copilot.src.data_utils.load_json import load_system_prompt
 
 llm_result = None
 
@@ -48,9 +48,14 @@ def check_llm_result(scene):
         
         # Reset the variable
         llm_result = None
+        
+        # Refreshes the panel to show the response from LLM.
+        for window in bpy.context.window_manager.windows:
+            for area in window.screen.areas:
+                if area.type == 'VIEW_3D':
+                    area.tag_redraw()
         return None  # Stop the timer
-    return 1  # Check again in 0.2 seconds
-
+    return 0.2  # Check again in 0.2 seconds
 
 class ChatMessage(PropertyGroup):
     content: StringProperty(name="Chat", default="")
@@ -233,9 +238,9 @@ def unregister():
 def worker(user_messages):
     global llm_result
     caller = OpenAICaller()
-    system_prompt = load_json("node_copilot/prompt/system_prompt.json")
-    result = caller.send(system_prompt, user_message=user_messages)
-    print(result)
+    system_prompt = load_system_prompt()
+    llm_result = caller.send(system_prompt, user_message=user_messages)
+    print(llm_result) # print the response in the Blender console for debugging
 
 if __name__ == '__main__':
     register()
