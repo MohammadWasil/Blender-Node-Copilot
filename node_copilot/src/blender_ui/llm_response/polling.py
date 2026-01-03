@@ -12,6 +12,7 @@ def check_llm_result(scene):
         
         # Reset the variable
         state.llm_result = None
+        state.last_llm_response = llm_msg.content
 
         re_render_chat_panel()
         

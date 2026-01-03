@@ -1,0 +1,4 @@
+# This is a skeleton file which will contain the generated code from the LLM.
+# It will be created and loaded by the node_generator operator.
+# The code will define a function called generated_material().
+# which will create the shader nodes and assign the material to the selected mesh object.
