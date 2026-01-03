@@ -76,7 +76,7 @@ class NodeCoPilotPanel(bpy.types.Panel):
         
         # End of Chat Box UI
         
+        layout.operator(ButtonOperator.bl_idname, text="Generate Shader Nodes", icon='NODE')
+
         # Add the Chat clear button
         layout.operator("chat.clear_history", text="Clear Chat History", icon='TRASH')
-        
-        layout.operator(ButtonOperator.bl_idname, text="Generate Nodes (Python Code)", icon='WORLD_DATA')
