@@ -17,7 +17,7 @@ class NodeCoPilotPanel(bpy.types.Panel):
         # Draw the new mesh placeholder property
         layout.prop(context.scene, "my_mesh_placeholder", text="Mesh Object")
         
-        # Start of Chat Box UI
+        # Start of Chat Box UI #
 
         # A horizontal line to separate the sections
         layout.separator()
@@ -34,6 +34,15 @@ class NodeCoPilotPanel(bpy.types.Panel):
         # Adding a label or empty space keeps the box from collapsing
         col.label(text="")
     
+        # Initial greeting message from the LLM
+        initial_row = col.row()
+        # Create the individual bubble
+        initial_box = initial_row.box()
+        initial_col = initial_box.column(align=True)
+        initial_col.scale_y = 1
+        draw_multiline_text(initial_col, "Hello Wasil, how can I help you today!", width=30)
+        initial_row.separator()
+
         # Create a box for eveyr new message
         for msg in context.scene.chat_history:
             # Create a row to align left (LLM) /right (USER)
@@ -58,7 +67,7 @@ class NodeCoPilotPanel(bpy.types.Panel):
                 # Draw the text using your function
                 draw_multiline_text(inner_col, msg.content, width=30)
                 row.separator()
-        # ---------------------------- # 
+        # END OF THE CHATBOX UI # 
 
         # Input Field and Send Button
         row = layout.row(align=True)
