@@ -212,3 +212,6 @@ __marimo__/
 
 # pdf
 *.pdf
+
+# compressed files
+*.zip

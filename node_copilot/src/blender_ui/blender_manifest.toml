@@ -3,9 +3,9 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "node_copilot"
-version = "1.0.0"
+version = "0.0.1"
 name = "Blender Node CoPilot"
-tagline = "Makes working with Geomtry and Shader Nodes more easier and faster!"
+tagline = "Makes working with Geometry and Shader Nodes more easier and faster!"
 maintainer = "Mohammad Wasil Saleem <wasilmohd1@gmail.com>"
 # Supported types: "add-on", "theme"
 type = "add-on"
