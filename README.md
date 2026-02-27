@@ -1,4 +1,4 @@
-# Blender-Node-Copilot (WiP)
+# Blender-Text-to-Node-ChatBot (WiP)
 
 Example (More will follow):
 
